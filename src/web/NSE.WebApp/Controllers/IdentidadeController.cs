@@ -65,6 +65,14 @@ namespace NSE.WebApp.Controllers
             return LocalRedirect(returnUrl);
         }
 
+        [HttpGet]
+        [Route("sair")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
+        }
+
         private async Task RealizarLogin(UsuarioRespostaLogin resposta)
         {
             var token = ObterTokenFormatado(resposta.AccessToken);
