@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace NSE.WebApp.Controllers
 {
-    public class IdentidadeController : Controller
+    public class IdentidadeController : MainController
     {
         private readonly IAutenticacaoService _autenticacaoService;
 
@@ -32,6 +32,8 @@ namespace NSE.WebApp.Controllers
 
             var resposta = await _autenticacaoService.Registro(usuarioRegistro);
 
+            if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioRegistro);
+
             await RealizarLogin(resposta);
 
             return RedirectToAction("Index", "Home");
@@ -39,19 +41,28 @@ namespace NSE.WebApp.Controllers
 
         [HttpGet]
         [Route("login")]
-        public IActionResult Login() => View();
+        public IActionResult Login(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(UsuarioLogin usuarioLogin)
+        public async Task<IActionResult> Login(UsuarioLogin usuarioLogin, string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid) return View(usuarioLogin);
 
             var resposta = await _autenticacaoService.Login(usuarioLogin);
 
+            if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioLogin);
+
             await RealizarLogin(resposta);
 
-            return RedirectToAction("Index", "Home");
+            if(string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Index", "Home");
+
+            return LocalRedirect(returnUrl);
         }
 
         private async Task RealizarLogin(UsuarioRespostaLogin resposta)
