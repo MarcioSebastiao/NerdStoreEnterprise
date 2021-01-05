@@ -19,6 +19,7 @@ namespace NSE.Catalogo.Controllers
             _produtoRepository = produtoRepository;
         }
 
+        [AllowAnonymous]
         [HttpGet("catalogo/produtos")]
         public async Task<IEnumerable<Produto>> Index()
         {
