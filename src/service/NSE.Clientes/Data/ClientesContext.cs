@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 using NSE.Clientes.Models;
 using NSE.Core.Data;
 using NSE.Core.DomainObjects;
 using NSE.Core.Mediator;
+using NSE.Core.Messages;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,6 +27,9 @@ namespace NSE.Clientes.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Ignore<ValidationResult>();
+            modelBuilder.Ignore<Event>();
+
             foreach (var property in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetProperties().Where(p => p.ClrType == typeof(string))))
             {
                 property.SetColumnType("vachar(100)");
