@@ -32,10 +32,12 @@ namespace NSE.Carrinho
         {
             services.AddApiConfiguration();
             services.AddJwtConfiguration(Configuration);
+            services.AddSwaggerConfiguration();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwaggerConfiguration();
             app.UseApiConfiguration(env);
         }
     }
