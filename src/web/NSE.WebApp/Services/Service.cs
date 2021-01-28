@@ -1,4 +1,5 @@
 ﻿using NSE.WebApp.Extensions;
+using NSE.WebApp.Models;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -42,6 +43,11 @@ namespace NSE.WebApp.Services
 
             response.EnsureSuccessStatusCode();
             return true;
+        }
+
+        protected ResponseResult RetornoOk()
+        {
+            return new ResponseResult();
         }
     }
 }
