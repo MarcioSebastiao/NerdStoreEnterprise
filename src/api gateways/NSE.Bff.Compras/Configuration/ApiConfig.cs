@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSE.WebAPI.Core.Identidade;
 
 namespace NSE.Bff.Compras.Configuration
 {
@@ -37,7 +38,7 @@ namespace NSE.Bff.Compras.Configuration
 
             app.UseCors("Total");
 
-            app.UseAuthorization();
+            app.UseAuthConfiguration();
 
             app.UseEndpoints(endpoints =>
             {
