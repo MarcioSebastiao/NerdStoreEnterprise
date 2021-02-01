@@ -1,32 +1,42 @@
 ﻿using Microsoft.Extensions.Options;
+using NSE.Bff.Compras.Extensions;
+using NSE.Bff.Compras.Models;
 using NSE.Core.Communication;
-using NSE.WebApp.Extensions;
-using NSE.WebApp.Models;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace NSE.WebApp.Services
+namespace NSE.Bff.Compras.Services
 {
+    public interface ICarrinhoService
+    {
+        Task<CarrinhoDTO> ObterCarrinho();
+        Task<ResponseResult> AdicionarItemCarrinho(ItemCarrinhoDTO produto);
+        Task<ResponseResult> AtualizarItemCarrinho(Guid produtoId, ItemCarrinhoDTO produto);
+        Task<ResponseResult> RemoverItemCarrinho(Guid produtoId);
+    }
+
     public class CarrinhoService : Service, ICarrinhoService
     {
         private readonly HttpClient _httpClient;
 
-        public CarrinhoService(HttpClient httpClient, IOptions<AppSettings> settings)
+        public CarrinhoService(HttpClient httpClient, IOptions<AppServicesSettings> settings)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(settings.Value.CarrinhoUrl);
         }
 
-        public async Task<CarrinhoViewModel> ObterCarrinho()
+        public async Task<CarrinhoDTO> ObterCarrinho()
         {
-            var response = await _httpClient.GetAsync("/carrinho");
+            var response = await _httpClient.GetAsync("/carrinho/");
 
             TratarErrosResponse(response);
 
-            return await DeserializarObjetoResponse<CarrinhoViewModel>(response);
+            return await DeserializarObjetoResponse<CarrinhoDTO>(response);
         }
-        public async Task<ResponseResult> AdicionarItemCarrinho(ItemCarrinhoViewModel carrinho)
+
+      
+        public async Task<ResponseResult> AdicionarItemCarrinho(ItemCarrinhoDTO carrinho)
         {
             var itemContent = ObterConteudo(carrinho);
 
@@ -36,7 +46,7 @@ namespace NSE.WebApp.Services
 
             return RetornoOk();
         }
-        public async Task<ResponseResult> AtualizarItemCarrinho(Guid produtoId, ItemCarrinhoViewModel item)
+        public async Task<ResponseResult> AtualizarItemCarrinho(Guid produtoId, ItemCarrinhoDTO item)
         {
             var itemContent = ObterConteudo(item);
 
@@ -54,5 +64,5 @@ namespace NSE.WebApp.Services
 
             return RetornoOk();
         }
-    }
+    }    
 }
