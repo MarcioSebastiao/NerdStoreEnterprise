@@ -1,4 +1,4 @@
-﻿namespace NSE.WebApp.Models
+﻿namespace NSE.Core.Communication
 {
     public class ResponseResult
     {

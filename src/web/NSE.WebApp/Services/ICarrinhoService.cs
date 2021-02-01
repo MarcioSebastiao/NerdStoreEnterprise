@@ -1,4 +1,5 @@
-﻿using NSE.WebApp.Models;
+﻿using NSE.Core.Communication;
+using NSE.WebApp.Models;
 using System;
 using System.Threading.Tasks;
 
