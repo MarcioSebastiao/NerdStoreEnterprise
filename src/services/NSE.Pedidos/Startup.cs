@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NSE.Pedido
+namespace NSE.Pedidos
 {
     public class Startup
     {

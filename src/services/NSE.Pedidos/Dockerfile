@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["src/service/NSE.Pedido/NSE.Pedido.csproj", "src/service/NSE.Pedido/"]
-RUN dotnet restore "src/service/NSE.Pedido/NSE.Pedido.csproj"
+COPY ["src/services/NSE.Pedidos/NSE.Pedidos.csproj", "src/services/NSE.Pedidos/"]
+RUN dotnet restore "src/services/NSE.Pedidos/NSE.Pedidos.csproj"
 COPY . .
-WORKDIR "/src/src/service/NSE.Pedido"
-RUN dotnet build "NSE.Pedido.csproj" -c Release -o /app/build
+WORKDIR "/src/src/services/NSE.Pedidos"
+RUN dotnet build "NSE.Pedidos.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "NSE.Pedido.csproj" -c Release -o /app/publish
+RUN dotnet publish "NSE.Pedidos.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "NSE.Pedido.dll"]
+ENTRYPOINT ["dotnet", "NSE.Pedidos.dll"]
