@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NSE.Core.Mediator;
 using NSE.Pedidos.Application.Queries;
+using NSE.Pedidos.Domain.Pedidos;
 using NSE.Pedidos.Domain.Vouchers;
 using NSE.Pedidos.Infra.Data;
 using NSE.Pedidos.Infra.Data.Repositories;
@@ -16,6 +17,7 @@ namespace NSE.Pedidos.Configuration
             services.AddScoped<IVoucherQueries, VoucherQueries>();
 
             services.AddScoped<IVoucherRepository, VoucherRepository>();
+            services.AddScoped<IPedidoRepository, PedidoRespository>();
             services.AddScoped<PedidosContext>();
         }
     }
