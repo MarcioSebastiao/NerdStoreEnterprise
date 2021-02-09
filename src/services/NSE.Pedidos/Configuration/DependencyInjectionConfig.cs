@@ -16,6 +16,8 @@ namespace NSE.Pedidos.Configuration
 
             services.AddScoped<IVoucherQueries, VoucherQueries>();
 
+            services.AddScoped<IPedidoQueries, PedidoQueries>();
+
             services.AddScoped<IVoucherRepository, VoucherRepository>();
             services.AddScoped<IPedidoRepository, PedidoRespository>();
             services.AddScoped<PedidosContext>();
