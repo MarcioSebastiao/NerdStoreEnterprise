@@ -1,16 +1,49 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using NSE.Core.Mediator;
+using NSE.Pedidos.Application.Commands;
+using NSE.Pedidos.Application.Queries;
 using NSE.WebAPI.Core.Controllers;
+using NSE.WebAPI.Core.Usuario;
+using System.Threading.Tasks;
 
 namespace NSE.Pedidos.Controllers
 {
     public class PedidoController : MainController
     {
-        [HttpGet("Pedido/test")]
-        [Authorize]
-        public ActionResult Index()
+        private readonly IMediatorHandler _mediator;
+        private readonly IAspNetUser _user;
+        private readonly IPedidoQueries _pedidoQueries;
+
+        public PedidoController(IMediatorHandler mediator,
+            IAspNetUser user,
+            IPedidoQueries pedidoQueries)
         {
-            return CustomResponse("Swagger ok - JWT ok");
+            _mediator = mediator;
+            _user = user;
+            _pedidoQueries = pedidoQueries;
+        }
+
+        [HttpPost("pedido")]
+        public async Task<IActionResult> AdicionarPedido(AdicionarPedidoCommand pedido)
+        {
+            pedido.ClienteId = _user.ObterUserId();
+            return CustomResponse(await _mediator.EnviarComando(pedido));
+        }
+
+        [HttpGet("pedido/ultimo")]
+        public async Task<IActionResult> UltimoPedido()
+        {
+            var pedido = await _pedidoQueries.ObterUltimoPedido(_user.ObterUserId());
+
+            return pedido == null ? NotFound() : CustomResponse(pedido);
+        }
+
+        [HttpGet("pedido/lista-cliente")]
+        public async Task<IActionResult> ListaPorCliente()
+        {
+            var pedidos = await _pedidoQueries.ObterListaPorClienteId(_user.ObterUserId());
+
+            return pedidos == null ? NotFound() : CustomResponse(pedidos);
         }
     }
 }

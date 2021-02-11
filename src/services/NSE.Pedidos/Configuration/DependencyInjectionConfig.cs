@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using NSE.Core.Mediator;
 using NSE.Pedidos.Application.Commands;
@@ -9,13 +10,18 @@ using NSE.Pedidos.Domain.Pedidos;
 using NSE.Pedidos.Domain.Vouchers;
 using NSE.Pedidos.Infra.Data;
 using NSE.Pedidos.Infra.Data.Repositories;
+using NSE.WebAPI.Core.Usuario;
 
 namespace NSE.Pedidos.Configuration
 {
     public static class DependencyInjectionConfig
     {
         public static void RegisterServices(this IServiceCollection services)
-        { 
+        {
+            // API
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IAspNetUser, AspNetUser>();
+
             // Commands
             services.AddScoped<IRequestHandler<AdicionarPedidoCommand, ValidationResult>, PedidoCommandHandler>();
 
