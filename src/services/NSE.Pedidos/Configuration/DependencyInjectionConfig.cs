@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation.Results;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using NSE.Core.Mediator;
+using NSE.Pedidos.Application.Commands;
+using NSE.Pedidos.Application.Events;
 using NSE.Pedidos.Application.Queries;
 using NSE.Pedidos.Domain.Pedidos;
 using NSE.Pedidos.Domain.Vouchers;
@@ -11,13 +15,19 @@ namespace NSE.Pedidos.Configuration
     public static class DependencyInjectionConfig
     {
         public static void RegisterServices(this IServiceCollection services)
-        {
+        { 
+            // Commands
+            services.AddScoped<IRequestHandler<AdicionarPedidoCommand, ValidationResult>, PedidoCommandHandler>();
+
+            // Events
+            services.AddScoped<INotificationHandler<PedidoRealizadoEvent>, PedidoEventHandler>();
+
+            // Application
             services.AddScoped<IMediatorHandler, MediatorHandler>();
-
             services.AddScoped<IVoucherQueries, VoucherQueries>();
-
             services.AddScoped<IPedidoQueries, PedidoQueries>();
 
+            // Data
             services.AddScoped<IVoucherRepository, VoucherRepository>();
             services.AddScoped<IPedidoRepository, PedidoRepository>();
             services.AddScoped<PedidosContext>();
