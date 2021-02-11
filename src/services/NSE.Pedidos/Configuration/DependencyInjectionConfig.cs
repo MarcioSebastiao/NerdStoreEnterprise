@@ -19,7 +19,7 @@ namespace NSE.Pedidos.Configuration
             services.AddScoped<IPedidoQueries, PedidoQueries>();
 
             services.AddScoped<IVoucherRepository, VoucherRepository>();
-            services.AddScoped<IPedidoRepository, PedidoRespository>();
+            services.AddScoped<IPedidoRepository, PedidoRepository>();
             services.AddScoped<PedidosContext>();
         }
     }

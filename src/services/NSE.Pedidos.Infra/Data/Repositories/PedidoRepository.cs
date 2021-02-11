@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace NSE.Pedidos.Infra.Data.Repositories
 {
-    public class PedidoRespository : IPedidoRepository
+    public class PedidoRepository : IPedidoRepository
     {
         private readonly PedidosContext _context;
 
-        public PedidoRespository(PedidosContext context)
+        public PedidoRepository(PedidosContext context)
         {
             _context = context;
         }
