@@ -23,6 +23,10 @@ namespace NSE.WebApp.Extensions
         {
             return valor > 0 ? string.Format(Thread.CurrentThread.CurrentCulture, "{0:C}", valor) : "Gratuito";
         }
+        private static string FormatoMoeda(decimal valor)
+        {
+            return string.Format(Thread.CurrentThread.CurrentCulture, "{0:C}", valor);
+        }
         public static string MensagemEstoque(this RazorPage page, int quantidade)
         {
             return quantidade > 0 ? $"Apenas {quantidade} em estoque!" : "Produto esgotado!";
@@ -44,6 +48,11 @@ namespace NSE.WebApp.Extensions
             }
 
             return sb.ToString();
+        }
+
+        public static string UnidadesPorProdutoValorTotal(this RazorPage page, int unidades, decimal valor)
+        {
+            return $"{unidades}x {FormatoMoeda(valor)} = Total: {FormatoMoeda(valor * unidades)}";
         }
     }
 }
