@@ -15,7 +15,10 @@ namespace NSE.Clientes.Configuration
         public static void RegisterServices(this IServiceCollection services)
         {
             services.AddScoped<IMediatorHandler, MediatorHandler>();
+
             services.AddScoped<IRequestHandler<RegistrarClienteCommand, ValidationResult>, ClienteCommandHandler>();
+            services.AddScoped<IRequestHandler<AdicionarEnderecoCommand, ValidationResult>, ClienteCommandHandler>();
+
             services.AddScoped<INotificationHandler<ClienteRegistradoEvent>, ClienteEventHandler>();
 
             services.AddScoped<IClienteRepository, ClienteRepository>();
