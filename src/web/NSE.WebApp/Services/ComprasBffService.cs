@@ -3,6 +3,7 @@ using NSE.Core.Communication;
 using NSE.WebApp.Extensions;
 using NSE.WebApp.Models;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -16,6 +17,10 @@ namespace NSE.WebApp.Services
         Task<ResponseResult> AtualizarItemCarrinho(Guid produtoId, ItemCarrinhoViewModel carrinho);
         Task<ResponseResult> RemoverItemCarrinho(Guid produtoId);
         Task<ResponseResult> AplicarVoucherCarrinho(string voucher);
+
+        Task<ResponseResult> FinalizarPedido(PedidoTransacaoViewModel pedidoTransacao);
+        Task<PedidoViewModel> ObterUltimoPedido();
+        Task<IEnumerable<PedidoViewModel>> ObterListaPorClienteId();
         PedidoTransacaoViewModel MapearParaPedido(CarrinhoViewModel carrinho, EnderecoViewModel endereco);
     }
 
@@ -29,6 +34,7 @@ namespace NSE.WebApp.Services
             _httpClient.BaseAddress = new Uri(settings.Value.ComprasBffUrl);
         }
 
+        #region Carrinho
         public async Task<CarrinhoViewModel> ObterCarrinho()
         {
             var response = await _httpClient.GetAsync("/compras/carrinho/");
@@ -57,6 +63,7 @@ namespace NSE.WebApp.Services
 
             return RetornoOk();
         }
+
         public async Task<ResponseResult> AtualizarItemCarrinho(Guid produtoId, ItemCarrinhoViewModel item)
         {
             var itemContent = ObterConteudo(item);
@@ -67,6 +74,7 @@ namespace NSE.WebApp.Services
 
             return RetornoOk();
         }
+
         public async Task<ResponseResult> RemoverItemCarrinho(Guid produtoId)
         {
             var response = await _httpClient.DeleteAsync($"/compras/carrinho/items/{produtoId}");
@@ -85,6 +93,37 @@ namespace NSE.WebApp.Services
             if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
 
             return RetornoOk();
+        }
+        #endregion
+
+        #region Pedido
+        public async Task<ResponseResult> FinalizarPedido(PedidoTransacaoViewModel pedidoTransacao)
+        {
+            var pedidoContent = ObterConteudo(pedidoTransacao);
+
+            var response = await _httpClient.PostAsync("/compras/pedido/", pedidoContent);
+
+            if (!TratarErrosResponse(response)) return await DeserializarObjetoResponse<ResponseResult>(response);
+
+            return RetornoOk();
+        }
+
+        public async Task<PedidoViewModel> ObterUltimoPedido()
+        {
+            var response = await _httpClient.GetAsync("/compras/pedido/ultimo/");
+
+            TratarErrosResponse(response);
+
+            return await DeserializarObjetoResponse<PedidoViewModel>(response);
+        }
+
+        public async Task<IEnumerable<PedidoViewModel>> ObterListaPorClienteId()
+        {
+            var response = await _httpClient.GetAsync("/compras/pedido/lista-cliente/");
+
+            TratarErrosResponse(response);
+
+            return await DeserializarObjetoResponse<IEnumerable<PedidoViewModel>>(response);
         }
 
         public PedidoTransacaoViewModel MapearParaPedido(CarrinhoViewModel carrinho, EnderecoViewModel endereco)
@@ -114,5 +153,7 @@ namespace NSE.WebApp.Services
 
             return pedido;
         }
+
+        #endregion
     }
 }
