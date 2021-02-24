@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSE.Pagamentos.Data;
 using NSE.WebAPI.Core.Identidade;
 
 namespace NSE.Pagamentos.Configuration
@@ -11,6 +13,9 @@ namespace NSE.Pagamentos.Configuration
     {
         public static void AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddDbContext<PagamentosContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
             services.AddControllers();
 
             services.AddCors(options =>
