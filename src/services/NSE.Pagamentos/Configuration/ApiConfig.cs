@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSE.Pagamentos.Data;
+using NSE.Pagamentos.Facade;
 using NSE.WebAPI.Core.Identidade;
 
 namespace NSE.Pagamentos.Configuration
@@ -17,6 +18,8 @@ namespace NSE.Pagamentos.Configuration
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
+
+            services.Configure<PagamentoConfig>(configuration.GetSection("PagamentoConfig"));
 
             services.AddCors(options =>
             {
