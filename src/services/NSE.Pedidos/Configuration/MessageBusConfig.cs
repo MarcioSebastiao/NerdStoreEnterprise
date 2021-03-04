@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSE.Core.Utils;
 using NSE.MessageBus;
+using NSE.Pedidos.Services;
 
 namespace NSE.Pedidos.Configuration
 {
@@ -9,7 +10,8 @@ namespace NSE.Pedidos.Configuration
     {
         public static void AddMessageBusConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddMessageBus(configuration.GettMessageQueueConnection("MessageBus"));
+            services.AddMessageBus(configuration.GettMessageQueueConnection("MessageBus"))
+                .AddHostedService<PedidoOrquestradorIntegrationHandler>();
         }
     }
 }
