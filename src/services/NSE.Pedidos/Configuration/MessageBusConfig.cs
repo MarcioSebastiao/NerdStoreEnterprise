@@ -11,7 +11,8 @@ namespace NSE.Pedidos.Configuration
         public static void AddMessageBusConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddMessageBus(configuration.GettMessageQueueConnection("MessageBus"))
-                .AddHostedService<PedidoOrquestradorIntegrationHandler>();
+                .AddHostedService<PedidoOrquestradorIntegrationHandler>()
+                .AddHostedService<PedidoIntegrationHandler>();
         }
     }
 }
