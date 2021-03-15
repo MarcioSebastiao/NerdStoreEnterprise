@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NetDevPack.Security.JwtSigningCredentials;
 using NSE.Identidade.Data;
 using NSE.Identidade.Extensions;
-using NSE.WebAPI.Core.Identidade;
 
 namespace NSE.Identidade.Configuration
 {
@@ -13,6 +13,9 @@ namespace NSE.Identidade.Configuration
         public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services,
             IConfiguration configuration)
         {
+            services.AddJwksManager(options => options.Algorithm = Algorithm.ES256)
+                .PersistKeysToDatabaseStore<ApplicationDbContext>();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
@@ -21,8 +24,6 @@ namespace NSE.Identidade.Configuration
                 .AddErrorDescriber<IdentityMensagensPortugues>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
-            services.AddJwtConfiguration(configuration);
 
             return services;            
         }
