@@ -19,6 +19,7 @@ namespace NSE.WebAPI.Core.Usuario
         public Guid ObterUserId() => EstaAutenticado() ? Guid.Parse(_accessor.HttpContext.User.GetUserId()) : Guid.Empty;
         public string ObterUserEmail() => EstaAutenticado() ? _accessor.HttpContext.User.GetUserEmail() : "";
         public string ObterUserToken() => EstaAutenticado() ? _accessor.HttpContext.User.GetUserToken() : "";
+        public string ObterUserRefreshToken() => EstaAutenticado() ? _accessor.HttpContext.User.GetUserRefreshToken() : "";
         public bool EstaAutenticado() => _accessor.HttpContext.User.Identity.IsAuthenticated;
         public bool PossuiRole(string role) => _accessor.HttpContext.User.IsInRole(role);
         public IEnumerable<Claim> ObterClaims() => _accessor.HttpContext.User.Claims;
