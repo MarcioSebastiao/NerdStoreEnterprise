@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NetDevPack.Security.JwtSigningCredentials;
 using NetDevPack.Security.JwtSigningCredentials.Store.EntityFrameworkCore;
+using NSE.Identidade.Models;
 
 namespace NSE.Identidade.Data
 {
@@ -12,5 +13,8 @@ namespace NSE.Identidade.Data
         }
 
         public DbSet<SecurityKeyWithPrivate> SecurityKeys { get; set; }
+
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
     }
 }
