@@ -33,6 +33,7 @@ namespace NSE.Bff.Compras
             services.AddJwtConfiguration(Configuration);
             services.AddSwaggerConfiguration();
             services.RegisterServices();
+            services.ConfigureGrpcServices(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

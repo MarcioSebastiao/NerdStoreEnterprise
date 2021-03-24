@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NSE.Bff.Compras.Models;
 using NSE.Bff.Compras.Services;
+using NSE.Bff.Compras.Services.gRPC;
 using NSE.WebAPI.Core.Controllers;
 using System;
 using System.Linq;
@@ -13,15 +14,19 @@ namespace NSE.Bff.Compras.Controllers
     public class CarrinhoController : MainController
     {
         private readonly ICarrinhoService _carrinhoService;
+        private readonly ICarrinhoGrpcService _carrinhoGrpcService;
         private readonly ICatalogoService _catalogoService;
         private readonly IPedidoService _pedidoService;
 
         public CarrinhoController(
             ICarrinhoService carrinhoService,
+            ICarrinhoGrpcService carrinhoGrpcService,
             ICatalogoService catalogoService,
-            IPedidoService pedidoService)
+            IPedidoService pedidoService
+            )
         {
             _carrinhoService = carrinhoService;
+            _carrinhoGrpcService = carrinhoGrpcService;
             _catalogoService = catalogoService;
             _pedidoService = pedidoService;
         }
@@ -30,14 +35,14 @@ namespace NSE.Bff.Compras.Controllers
         [Route("compras/carrinho")]
         public async Task<IActionResult> Index()
         {
-            return CustomResponse(await _carrinhoService.ObterCarrinho());
+            return CustomResponse(await _carrinhoGrpcService.ObterCarrinho());
         }
 
         [HttpGet]
         [Route("compras/carrinho-quantidade")]
         public async Task<int> ObterQuantidadeCarrinho()
         {
-            var quantidade = await _carrinhoService.ObterCarrinho();
+            var quantidade = await _carrinhoGrpcService.ObterCarrinho();
 
             return quantidade?.Itens.Sum(i => i.Quantidade) ?? 0;
         }
@@ -80,7 +85,7 @@ namespace NSE.Bff.Compras.Controllers
         {
             var produto = await _catalogoService.ObterPorId(produtoId);
 
-            if(produto == null)
+            if (produto == null)
             {
                 AdicionarErroProcessamento("produto inexistente!");
                 return CustomResponse();
@@ -116,7 +121,7 @@ namespace NSE.Bff.Compras.Controllers
             var carrinho = await _carrinhoService.ObterCarrinho();
             var itemCarrinho = carrinho.Itens.FirstOrDefault(p => p.ProdutoId == produto.Id);
 
-            if(itemCarrinho != null && itemCarrinho.Quantidade + quantidade > produto.QuantidadeEstoque)
+            if (itemCarrinho != null && itemCarrinho.Quantidade + quantidade > produto.QuantidadeEstoque)
             {
                 AdicionarErroProcessamento($"O Produto {produto.Nome} possui {produto.QuantidadeEstoque} unidades em estoque, você selecionou {quantidade}");
                 return;
