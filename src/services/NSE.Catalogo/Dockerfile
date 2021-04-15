@@ -7,10 +7,14 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["src/service/NSE.Catalogo/NSE.Catalogo.csproj", "src/service/NSE.Catalogo/"]
-RUN dotnet restore "src/service/NSE.Catalogo/NSE.Catalogo.csproj"
+COPY ["./services/NSE.Catalogo/NSE.Catalogo.csproj", "services/NSE.Catalogo/"]
+COPY ["./building blocks/NSE.Core/NSE.Core.csproj", "building blocks/NSE.WebAPI.Core/"]
+COPY ["./building blocks/NSE.WebAPI.Core/NSE.WebAPI.Core.csproj", "building blocks/NSE.WebAPI.Core/"]
+COPY ["./building blocks/NSE.MessageBus/NSE.MessageBus.csproj", "building blocks/NSE.MessageBus/"]
+
+RUN dotnet restore "services/NSE.Catalogo/NSE.Catalogo.csproj"
 COPY . .
-WORKDIR "/src/src/service/NSE.Catalogo"
+WORKDIR "services/NSE.Catalogo"
 RUN dotnet build "NSE.Catalogo.csproj" -c Release -o /app/build
 
 FROM build AS publish

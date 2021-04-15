@@ -7,10 +7,14 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["src/service/NSE.Carrinho/NSE.Carrinho.csproj", "src/service/NSE.Carrinho/"]
-RUN dotnet restore "src/service/NSE.Carrinho/NSE.Carrinho.csproj"
+COPY ["./services/NSE.Carrinho/NSE.Carrinho.csproj", "services/NSE.Carrinho/"]
+COPY ["./building blocks/NSE.Core/NSE.Core.csproj", "building blocks/NSE.WebAPI.Core/"]
+COPY ["./building blocks/NSE.WebAPI.Core/NSE.WebAPI.Core.csproj", "building blocks/NSE.WebAPI.Core/"]
+COPY ["./building blocks/NSE.MessageBus/NSE.MessageBus.csproj", "building blocks/NSE.MessageBus/"]
+
+RUN dotnet restore "services/NSE.Carrinho/NSE.Carrinho.csproj"
 COPY . .
-WORKDIR "/src/src/service/NSE.Carrinho"
+WORKDIR "services/NSE.Carrinho"
 RUN dotnet build "NSE.Carrinho.csproj" -c Release -o /app/build
 
 FROM build AS publish
