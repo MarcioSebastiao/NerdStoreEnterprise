@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.Extensions.DependencyInjection;
+using NSE.WebAPI.Core.Extensions;
 using NSE.WebAPI.Core.Usuario;
 using NSE.WebApp.Extensions;
 using NSE.WebApp.Services;
 using NSE.WebApp.Services.Handlers;
 using Polly;
 using System;
-
 namespace NSE.WebApp.Configuration
 {
     public static class DependencyInjectionConfig
@@ -22,25 +22,29 @@ namespace NSE.WebApp.Configuration
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
             services.AddHttpClient<IAutenticacaoService, AutenticacaoService>()
-                .AddPolicyHandler(PollyExtensions.EsperarTentar())
+                .AddPolicyHandler(Extensions.PollyExtensions.EsperarTentar())
+                .AllowSelfSignedCertificate()
                 .AddTransientHttpErrorPolicy(p =>
                     p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddHttpClient<ICatalogoService, CatalogoService>()
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-                .AddPolicyHandler(PollyExtensions.EsperarTentar())
+                .AddPolicyHandler(Extensions.PollyExtensions.EsperarTentar())
+                .AllowSelfSignedCertificate()
                 .AddTransientHttpErrorPolicy(p =>
                     p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddHttpClient<IComprasBffService, ComprasBffService>()
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-                .AddPolicyHandler(PollyExtensions.EsperarTentar())
+                .AddPolicyHandler(Extensions.PollyExtensions.EsperarTentar())
+                .AllowSelfSignedCertificate()
                 .AddTransientHttpErrorPolicy(p =>
                     p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddHttpClient<IClienteService, ClienteService>()
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-                .AddPolicyHandler(PollyExtensions.EsperarTentar())
+                .AddPolicyHandler(Extensions.PollyExtensions.EsperarTentar())
+                .AllowSelfSignedCertificate()
                 .AddTransientHttpErrorPolicy(p =>
                     p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
             #endregion
