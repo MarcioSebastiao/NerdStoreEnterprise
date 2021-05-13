@@ -21,7 +21,7 @@ services:
 
     web-mvc:
         image: nerdstore-web-mvc-ecommerce:latest
-        container_name: nerdstore-web-mvc-ecommerce
+        # container_name: nerdstore-web-mvc-ecommerce
         build:
             context: ../src
             dockerfile: ./web/NSE.WebApp/Dockerfile
@@ -29,6 +29,8 @@ services:
         environment:
             - ASPNETCORE_ENVIRONMENT=Production
             - ASPNETCORE_URLS=http://*:5001
+        volumes:
+            - dpkeys:/var/data_protection_keys/
         depends_on:
             - api-catalogo
             - api-identidade
@@ -175,3 +177,6 @@ services:
             - "443:443"
         depends_on:
             - web-mvc
+
+volumes:
+    dpkeys:
